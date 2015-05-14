@@ -65,13 +65,20 @@ static void update_time() {
 
   trigger_custom_animation(tick_time);
   text_layer_set_text(text_layers[0], mins);
-  text_layer_set_text(text_layers[1], hours);
 
   static char single_hour[] = "";
   single_hour[0] = (char) hours[1];
 
-  if(tick_time->tm_hour < 10) {
+  int hour = tick_time->tm_hour;
+
+  if(hour > 12) {
+    hour -= 12;
+  }
+
+  if(hour < 10) {
     text_layer_set_text(text_layers[1], single_hour);
+  } else {
+    text_layer_set_text(text_layers[1], hours);
   }
 }
 
