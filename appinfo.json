@@ -1,0 +1,19 @@
+{
+  "uuid": "9ffb1be9-c03a-477b-b5fc-587ef8547435",
+  "shortName": "Dani",
+  "longName": "Dani",
+  "companyName": "MakeAwesomeHappen",
+  "versionCode": 1,
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["aplite", "basalt"],
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
