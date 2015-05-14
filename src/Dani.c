@@ -25,6 +25,7 @@ static void deinit() {
 }
 
 static void main_window_load(Window *window) {
+  fill_hour_frames();
   set_postions();
   text_layer_set_font(text_layers[0], fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD));
   text_layer_set_text(text_layers[0], "00");
@@ -111,47 +112,7 @@ static void set_postions() {
     text_layers[0] = text_layer_create(GRect(x_pos, 0, TM_SIZE, TM_SIZE));
   }
 
-  switch(hours) {
-    case 11:
-        text_layers[1] = text_layer_create(GRect(INNER_LEFT, INNER_TOP, TH_SIZE_X, TH_SIZE_Y));
-      break;
-    case 7:
-        text_layers[1] = text_layer_create(GRect(INNER_LEFT - 1, INNER_BOTTOM, TH_SIZE_X, TH_SIZE_Y));
-      break;
-    case 12:
-        text_layers[1] = text_layer_create(GRect(INNER_LEFT + 43, INNER_TOP, TH_SIZE_X, TH_SIZE_Y));
-        break;
-    case 6:
-        text_layers[1] = text_layer_create(GRect(INNER_LEFT + 45, INNER_BOTTOM, TH_SIZE_X, TH_SIZE_Y));
-      break;
-    case 1:
-        text_layers[1] = text_layer_create(GRect(INNER_RIGHT + 7, INNER_TOP, TH_SIZE_X, TH_SIZE_Y));
-      break;
-    case 5:
-        text_layers[1] = text_layer_create(GRect(INNER_RIGHT - 2, INNER_BOTTOM, TH_SIZE_X, TH_SIZE_Y));
-      break;
-    case 3:
-        text_layers[1] = text_layer_create(GRect(INNER_RIGHT - 2, INNER_BOTTOM / 2, TH_SIZE_X, TH_SIZE_Y));
-      break;
-    case 9:
-        text_layers[1] = text_layer_create(GRect(INNER_LEFT - 1, INNER_BOTTOM / 2, TH_SIZE_X, TH_SIZE_Y));
-      break;
-    case 2:
-        text_layers[1] = text_layer_create(GRect(INNER_RIGHT - 1, (INNER_BOTTOM / 4) + 2, TH_SIZE_X, TH_SIZE_Y));
-      break;
-    case 4:
-        text_layers[1] = text_layer_create(GRect(INNER_RIGHT - 4, INNER_BOTTOM - 30, TH_SIZE_X, TH_SIZE_Y));
-      break;
-    case 10:
-        text_layers[1] = text_layer_create(GRect(INNER_LEFT, (INNER_BOTTOM / 4) + 2, TH_SIZE_X, TH_SIZE_Y));
-      break;
-    case 8:
-        text_layers[1] = text_layer_create(GRect(INNER_LEFT - 1, INNER_BOTTOM - 30, TH_SIZE_X, TH_SIZE_Y));
-      break;
-    default:
-        text_layers[1] = text_layer_create(GRect(INNER_LEFT + 43, INNER_TOP, TH_SIZE_X, TH_SIZE_Y));
-      break;
-  }
+  text_layers[1] = text_layer_create(hour_pos[hours]);
 }
 
 static void trigger_custom_animation(struct tm *tick_time) {
@@ -193,51 +154,27 @@ static void trigger_custom_animation(struct tm *tick_time) {
     to_frame_mins = GRect(x_pos, 0, TM_SIZE, TM_SIZE);
   }
 
-  switch(hours) {
-    case 11:
-        to_frame_hours = GRect(INNER_LEFT, INNER_TOP, TH_SIZE_X, TH_SIZE_Y);
-      break;
-    case 7:
-        to_frame_hours = GRect(INNER_LEFT - 1, INNER_BOTTOM, TH_SIZE_X, TH_SIZE_Y);
-      break;
-    case 12:
-        to_frame_hours = GRect(INNER_LEFT + 43, INNER_TOP, TH_SIZE_X, TH_SIZE_Y);
-        break;
-    case 6:
-        to_frame_hours = GRect(INNER_LEFT + 45, INNER_BOTTOM, TH_SIZE_X, TH_SIZE_Y);
-      break;
-    case 1:
-        to_frame_hours = GRect(INNER_RIGHT + 7, INNER_TOP, TH_SIZE_X, TH_SIZE_Y);
-      break;
-    case 5:
-        to_frame_hours = GRect(INNER_RIGHT - 2, INNER_BOTTOM, TH_SIZE_X, TH_SIZE_Y);
-      break;
-    case 3:
-        to_frame_hours = GRect(INNER_RIGHT - 2, INNER_BOTTOM / 2, TH_SIZE_X, TH_SIZE_Y);
-      break;
-    case 9:
-        to_frame_hours = GRect(INNER_LEFT - 1, INNER_BOTTOM / 2, TH_SIZE_X, TH_SIZE_Y);
-      break;
-    case 2:
-        to_frame_hours = GRect(INNER_RIGHT - 1, (INNER_BOTTOM / 4) + 2, TH_SIZE_X, TH_SIZE_Y);
-      break;
-    case 4:
-        to_frame_hours = GRect(INNER_RIGHT - 4, INNER_BOTTOM - 30, TH_SIZE_X, TH_SIZE_Y);
-      break;
-    case 10:
-        to_frame_hours = GRect(INNER_LEFT, (INNER_BOTTOM / 4) + 2, TH_SIZE_X, TH_SIZE_Y);
-      break;
-    case 8:
-        to_frame_hours = GRect(INNER_LEFT - 1, INNER_BOTTOM - 30, TH_SIZE_X, TH_SIZE_Y);
-      break;
-    default:
-        to_frame_hours = GRect(INNER_LEFT + 43, INNER_TOP, TH_SIZE_X, TH_SIZE_Y);
-      break;
-  }
+  to_frame_hours = hour_pos[hours];
 
   s_property_animation = property_animation_create_layer_frame((Layer *)text_layers[1], &from_frame_hours, &to_frame_hours);
   animation_schedule((Animation*) s_property_animation);
 
   s_property_animation = property_animation_create_layer_frame((Layer *)text_layers[0], &from_frame_mins, &to_frame_mins);
   animation_schedule((Animation*) s_property_animation);
+}
+
+static void fill_hour_frames() {
+  hour_pos[0] = GRect(INNER_LEFT + 43, INNER_TOP, TH_SIZE_X, TH_SIZE_Y);
+  hour_pos[1] = GRect(INNER_RIGHT + 7, INNER_TOP, TH_SIZE_X, TH_SIZE_Y);
+  hour_pos[2] = GRect(INNER_RIGHT - 1, (INNER_BOTTOM / 4) + 2, TH_SIZE_X, TH_SIZE_Y);
+  hour_pos[3] = GRect(INNER_RIGHT - 2, INNER_BOTTOM / 2, TH_SIZE_X, TH_SIZE_Y);
+  hour_pos[4] = GRect(INNER_RIGHT - 4, INNER_BOTTOM - 30, TH_SIZE_X, TH_SIZE_Y);
+  hour_pos[5] = GRect(INNER_RIGHT - 2, INNER_BOTTOM, TH_SIZE_X, TH_SIZE_Y);
+  hour_pos[6] = GRect(INNER_LEFT + 45, INNER_BOTTOM, TH_SIZE_X, TH_SIZE_Y);
+  hour_pos[7] = GRect(INNER_LEFT - 1, INNER_BOTTOM, TH_SIZE_X, TH_SIZE_Y);
+  hour_pos[8] = GRect(INNER_LEFT - 1, INNER_BOTTOM - 30, TH_SIZE_X, TH_SIZE_Y);
+  hour_pos[9] = GRect(INNER_LEFT - 1, INNER_BOTTOM / 2, TH_SIZE_X, TH_SIZE_Y);
+  hour_pos[10] = GRect(INNER_LEFT, (INNER_BOTTOM / 4) + 2, TH_SIZE_X, TH_SIZE_Y);
+  hour_pos[11] = GRect(INNER_LEFT, INNER_TOP, TH_SIZE_X, TH_SIZE_Y);
+  hour_pos[12] = GRect(INNER_LEFT + 43, INNER_TOP, TH_SIZE_X, TH_SIZE_Y);
 }

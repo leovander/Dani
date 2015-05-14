@@ -11,12 +11,14 @@
 
 static Window *s_main_window;
 static TextLayer *text_layers[2];
+static GRect hour_pos[13];
 static PropertyAnimation *s_property_animation;
 
 static void update_time();
 static void main_window_load(Window *window);
 static void main_window_unload(Window *window);
 static void set_postions();
+static void fill_hour_frames();
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed);
 static void trigger_custom_animation(struct tm *tick_time);
 static void init();
