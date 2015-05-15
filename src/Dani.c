@@ -75,7 +75,7 @@ static void update_time() {
     hour -= 12;
   }
 
-  if(hour < 10) {
+  if(hour < 10 && hour > 0) {
     text_layer_set_text(text_layers[1], single_hour);
   } else {
     text_layer_set_text(text_layers[1], hours);
