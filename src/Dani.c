@@ -44,7 +44,8 @@ static void main_window_load(Window *window) {
 static void main_window_unload() {
   text_layer_destroy(text_layers[0]);
   text_layer_destroy(text_layers[1]);
-  property_animation_destroy(s_property_animation);
+  property_animation_destroy(s_property_animation_1);
+  property_animation_destroy(s_property_animation_2);
 }
 
 static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
@@ -79,6 +80,20 @@ static void update_time(struct tm *tick_time) {
     text_layer_set_text(text_layers[1], hours);
   }
   APP_LOG(APP_LOG_LEVEL_DEBUG, "2");
+}
+
+static void anim_stopped_handler_1(Animation *animation, bool finished, void *context) {
+#ifdef PBL_PLATFORM_APLITE
+  // Free the animation
+  property_animation_destroy(s_property_animation_1);
+#endif
+}
+
+static void anim_stopped_handler_2(Animation *animation, bool finished, void *context) {
+#ifdef PBL_PLATFORM_APLITE
+  // Free the animation
+  property_animation_destroy(s_property_animation_2);
+#endif
 }
 
 static void trigger_custom_animation(struct tm *tick_time) {
@@ -160,11 +175,17 @@ static void trigger_custom_animation(struct tm *tick_time) {
 
   APP_LOG(APP_LOG_LEVEL_DEBUG, "5");
 
-  s_property_animation = property_animation_create_layer_frame((Layer *)text_layers[1], &from_frame_hours, &to_frame_hours);
-  animation_schedule((Animation*) s_property_animation);
+  s_property_animation_1 = property_animation_create_layer_frame((Layer *)text_layers[1], &from_frame_hours, &to_frame_hours);
+  animation_set_handlers((Animation*)s_property_animation_1, (AnimationHandlers) {
+    .stopped = anim_stopped_handler_1
+  }, NULL);
+  animation_schedule((Animation*) s_property_animation_1);
 
-  s_property_animation = property_animation_create_layer_frame((Layer *)text_layers[0], &from_frame_mins, &to_frame_mins);
-  animation_schedule((Animation*) s_property_animation);
+  s_property_animation_2 = property_animation_create_layer_frame((Layer *)text_layers[0], &from_frame_mins, &to_frame_mins);
+  animation_set_handlers((Animation*)s_property_animation_2, (AnimationHandlers) {
+    .stopped = anim_stopped_handler_2
+  }, NULL);
+  animation_schedule((Animation*) s_property_animation_2);
 
   APP_LOG(APP_LOG_LEVEL_DEBUG, "6");
 }
