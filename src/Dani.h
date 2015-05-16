@@ -5,7 +5,7 @@
 #define TH_SIZE_X 35
 #define TH_SIZE_Y 35
 #define INNER_LEFT 27
-#define INNER_RIGHT 114
+#define INNER_RIGHT 112
 #define INNER_TOP 9
 #define INNER_BOTTOM 119
 
