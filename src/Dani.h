@@ -13,8 +13,8 @@ static Window *s_main_window;
 static TextLayer *text_layers[2];
 static GRect hour_pos[13];
 static PropertyAnimation *s_property_animation_1;
-static PropertyAnimation *s_property_animation_2;
 static bool startup;
+static int current_hour;
 
 static void update_time(struct tm *tick_time);
 static void main_window_load(Window *window);

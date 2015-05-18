@@ -3,8 +3,8 @@
   "shortName": "Dani",
   "longName": "Dani",
   "companyName": "leovander",
-  "versionCode": 1.5,
-  "versionLabel": "1.5",
+  "versionCode": 1.6,
+  "versionLabel": "1.6",
   "sdkVersion": "3",
   "targetPlatforms": ["aplite", "basalt"],
   "watchapp": {
