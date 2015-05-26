@@ -4,9 +4,10 @@
 void in_received_handler(DictionaryIterator *received, void *context) {
   // incoming message received
   Tuple *inverted_tuple = dict_find(received, CONFIG_INVERTED);
+  Tuple *innerhours_tuple = dict_find(received, CONFIG_INNERHOURS);
+
   if(inverted_tuple) {
     strcpy(inverted_value, inverted_tuple->value->cstring);
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Storing %s", inverted_tuple->value->cstring);
 
     if(strcmp(inverted_value, "0") == 0) {
       APP_LOG(APP_LOG_LEVEL_DEBUG, "Black");
@@ -20,8 +21,19 @@ void in_received_handler(DictionaryIterator *received, void *context) {
       text_layer_set_text_color(text_layers[1], GColorBlack);
     }
   } else {
-    //persist_write_string(CONFIG_INVERTED, '0');
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "No Option Set");
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "No Background Option Set");
+  }
+
+  if(innerhours_tuple) {
+    strcpy(innerhours_value, innerhours_tuple->value->cstring);
+
+    if(strcmp(innerhours_value, "0") == 0) {
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "Normal");
+    } else {
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "Inside");
+    }
+  } else {
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "No Hours Option Set");
   }
 }
 
@@ -43,17 +55,13 @@ static void init() {
 
   if(persist_exists(CONFIG_INVERTED)) {
     persist_read_string(CONFIG_INVERTED, inverted_value, sizeof(inverted_value));
-    //APP_LOG(APP_LOG_LEVEL_DEBUG, "Option Set: %c", inverted_value[0]);
   } else {
     strcpy(inverted_value, "0");
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "No Option Set");
   }
 
   if(strcmp(inverted_value, "0") == 0) {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "Black");
     window_set_background_color(s_main_window, GColorBlack);
   } else {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "White");
     window_set_background_color(s_main_window, GColorWhite);
   }
 
@@ -68,6 +76,7 @@ static void init() {
 
 static void deinit() {
   persist_write_string(CONFIG_INVERTED, inverted_value);
+  persist_write_string(CONFIG_INNERHOURS, innerhours_value);
   window_destroy(s_main_window);
 }
 
