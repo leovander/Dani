@@ -3,15 +3,15 @@
   "shortName": "Dani",
   "longName": "Dani",
   "companyName": "leovander",
-  "versionCode": 1.6,
-  "versionLabel": "1.6",
+  "versionCode": 1.7,
+  "versionLabel": "1.7",
   "sdkVersion": "3",
   "targetPlatforms": ["aplite", "basalt"],
   "watchapp": {
     "watchface": true
   },
   "appKeys": {
-    "dummy": 0
+    "inverted": 0
   },
   "resources": {
     "media": []

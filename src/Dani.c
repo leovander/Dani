@@ -1,15 +1,61 @@
 #include <pebble.h>
 #include "Dani.h"
 
+void in_received_handler(DictionaryIterator *received, void *context) {
+  // incoming message received
+  Tuple *inverted_tuple = dict_find(received, CONFIG_INVERTED);
+  if(inverted_tuple) {
+    strcpy(inverted_value, inverted_tuple->value->cstring);
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Storing %s", inverted_tuple->value->cstring);
+
+    if(strcmp(inverted_value, "0") == 0) {
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "Black");
+      window_set_background_color(s_main_window, GColorBlack);
+      text_layer_set_text_color(text_layers[0], GColorWhite);
+      text_layer_set_text_color(text_layers[1], GColorWhite);
+    } else {
+      APP_LOG(APP_LOG_LEVEL_DEBUG, "White");
+      window_set_background_color(s_main_window, GColorWhite);
+      text_layer_set_text_color(text_layers[0], GColorBlack);
+      text_layer_set_text_color(text_layers[1], GColorBlack);
+    }
+  } else {
+    //persist_write_string(CONFIG_INVERTED, '0');
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "No Option Set");
+  }
+}
+
 int main(void) {
   init();
+
+  //register for messages
+  app_message_register_inbox_received(in_received_handler);
+  const uint32_t inbound_size = 64;
+  const uint32_t outbound_size = 64;
+  app_message_open(inbound_size, outbound_size);
+
   app_event_loop();
   deinit();
 }
 
 static void init() {
   s_main_window = window_create();
-  window_set_background_color(s_main_window, GColorBlack);
+
+  if(persist_exists(CONFIG_INVERTED)) {
+    persist_read_string(CONFIG_INVERTED, inverted_value, sizeof(inverted_value));
+    //APP_LOG(APP_LOG_LEVEL_DEBUG, "Option Set: %c", inverted_value[0]);
+  } else {
+    strcpy(inverted_value, "0");
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "No Option Set");
+  }
+
+  if(strcmp(inverted_value, "0") == 0) {
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "Black");
+    window_set_background_color(s_main_window, GColorBlack);
+  } else {
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "White");
+    window_set_background_color(s_main_window, GColorWhite);
+  }
 
   window_set_window_handlers(s_main_window, (WindowHandlers) {
     .load = main_window_load,
@@ -21,6 +67,7 @@ static void init() {
 }
 
 static void deinit() {
+  persist_write_string(CONFIG_INVERTED, inverted_value);
   window_destroy(s_main_window);
 }
 
@@ -194,10 +241,16 @@ static void updateTimeLayers() {
   text_layer_set_font(text_layers[0], fonts_get_system_font(FONT_KEY_GOTHIC_14_BOLD));
   text_layer_set_text(text_layers[0], "");
   text_layer_set_background_color(text_layers[0], GColorClear);
-  text_layer_set_text_color(text_layers[0], GColorWhite);
 
   text_layer_set_font(text_layers[1], fonts_get_system_font(FONT_KEY_BITHAM_34_MEDIUM_NUMBERS));
   text_layer_set_text(text_layers[1], "");
   text_layer_set_background_color(text_layers[1], GColorClear);
-  text_layer_set_text_color(text_layers[1], GColorWhite);
+
+  if(strcmp(inverted_value, "0") == 0) {
+    text_layer_set_text_color(text_layers[0], GColorWhite);
+    text_layer_set_text_color(text_layers[1], GColorWhite);
+  } else {
+    text_layer_set_text_color(text_layers[0], GColorBlack);
+    text_layer_set_text_color(text_layers[1], GColorBlack);
+  }
 }

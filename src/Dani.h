@@ -15,6 +15,7 @@ static GRect hour_pos[13];
 static PropertyAnimation *s_property_animation_1;
 static bool startup;
 static int current_hour;
+static char inverted_value[1];
 
 static void update_time(struct tm *tick_time);
 static void main_window_load(Window *window);
@@ -25,3 +26,7 @@ static void tick_handler(struct tm *tick_time, TimeUnits units_changed);
 static void trigger_custom_animation(struct tm *tick_time);
 static void init();
 static void deinit();
+
+enum {
+  CONFIG_INVERTED = 0x0
+};

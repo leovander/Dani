@@ -1,13 +1,15 @@
-Pebble.addEventListener('ready', function (e) {
-  console.log('JavaScript app ready and running!')
-
-  var watch = Pebble.getActiveWatchInfo()
-
-  if(watch) {
-    console.log(watch.platform)
+Pebble.addEventListener('showConfiguration', function (e) {
+  var inverted_value = localStorage.getItem("inverted_value");
+  if(inverted_value) {
+    Pebble.openURL('http://ewit.me/itorres/pebble_configs/Dani/aplite.html' +
+                      "?inverted=" + inverted_value)
+  } else {
+    Pebble.openURL('http://ewit.me/itorres/pebble_configs/Dani/aplite.html')
   }
 })
 
-Pebble.addEventListener('showConfiguration', function (e) {
-  Pebble.openURL('https://my-website.com/config-page.html')
+Pebble.addEventListener('webviewclosed', function (e) {
+  var configuration = JSON.parse(e.response)
+  localStorage.setItem("inverted_value", configuration.inverted)
+  Pebble.sendAppMessage(configuration)
 })
