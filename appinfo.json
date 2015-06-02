@@ -11,8 +11,7 @@
     "watchface": true
   },
   "appKeys": {
-    "inverted": 0,
-    "innerHours": 1
+    "inverted": 0
   },
   "resources": {
     "media": []

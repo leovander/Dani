@@ -15,8 +15,8 @@ static GRect hour_pos[13];
 static PropertyAnimation *s_property_animation_1;
 static bool startup;
 static int current_hour;
-static char inverted_value[1];
-static char innerhours_value[1];
+static char inverted_value[4]; //invf or invt
+//static char innerhours_value[1];
 
 static void update_time(struct tm *tick_time);
 static void main_window_load(Window *window);
@@ -29,6 +29,10 @@ static void init();
 static void deinit();
 
 enum {
-  CONFIG_INVERTED = 0x0,
-  CONFIG_INNERHOURS = 0x1
+  CONFIG_INVERTED = 0x0
 };
+
+// enum {
+//   CONFIG_INVERTED = 0x0,
+//   CONFIG_INNERHOURS = 0x1
+// };

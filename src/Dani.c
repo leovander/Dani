@@ -4,12 +4,12 @@
 void in_received_handler(DictionaryIterator *received, void *context) {
   // incoming message received
   Tuple *inverted_tuple = dict_find(received, CONFIG_INVERTED);
-  Tuple *innerhours_tuple = dict_find(received, CONFIG_INNERHOURS);
+  //Tuple *innerhours_tuple = dict_find(received, CONFIG_INNERHOURS);
 
   if(inverted_tuple) {
     strcpy(inverted_value, inverted_tuple->value->cstring);
 
-    if(strcmp(inverted_value, "0") == 0) {
+    if(strcmp(inverted_value, "invf") == 0) {
       APP_LOG(APP_LOG_LEVEL_DEBUG, "Black");
       window_set_background_color(s_main_window, GColorBlack);
       text_layer_set_text_color(text_layers[0], GColorWhite);
@@ -24,17 +24,22 @@ void in_received_handler(DictionaryIterator *received, void *context) {
     APP_LOG(APP_LOG_LEVEL_DEBUG, "No Background Option Set");
   }
 
-  if(innerhours_tuple) {
-    strcpy(innerhours_value, innerhours_tuple->value->cstring);
+  persist_write_string(CONFIG_INVERTED, inverted_value);
+  APP_LOG(APP_LOG_LEVEL_INFO, "%s", inverted_value);
 
-    if(strcmp(innerhours_value, "0") == 0) {
-      APP_LOG(APP_LOG_LEVEL_DEBUG, "Normal");
-    } else {
-      APP_LOG(APP_LOG_LEVEL_DEBUG, "Inside");
-    }
-  } else {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "No Hours Option Set");
-  }
+  vibes_short_pulse();
+
+  // if(innerhours_tuple) {
+  //   strcpy(innerhours_value, innerhours_tuple->value->cstring);
+  //
+  //   if(strcmp(innerhours_value, "0") == 0) {
+  //     APP_LOG(APP_LOG_LEVEL_DEBUG, "Normal");
+  //   } else {
+  //     APP_LOG(APP_LOG_LEVEL_DEBUG, "Inside");
+  //   }
+  // } else {
+  //   APP_LOG(APP_LOG_LEVEL_DEBUG, "No Hours Option Set");
+  // }
 }
 
 int main(void) {
@@ -55,14 +60,13 @@ static void init() {
 
   if(persist_exists(CONFIG_INVERTED)) {
     persist_read_string(CONFIG_INVERTED, inverted_value, sizeof(inverted_value));
-  } else {
-    strcpy(inverted_value, "0");
-  }
+    APP_LOG(APP_LOG_LEVEL_INFO, "Stored Value: %s", inverted_value);
 
-  if(strcmp(inverted_value, "0") == 0) {
-    window_set_background_color(s_main_window, GColorBlack);
+    if(strcmp(inverted_value, "inv") == 0) {
+      APP_LOG(APP_LOG_LEVEL_INFO, "poop");
+    }
   } else {
-    window_set_background_color(s_main_window, GColorWhite);
+    strcpy(inverted_value, "invf");
   }
 
   window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -71,12 +75,12 @@ static void init() {
   });
 
   window_stack_push(s_main_window, true);
-  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
+  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
 }
 
 static void deinit() {
-  persist_write_string(CONFIG_INVERTED, inverted_value);
-  persist_write_string(CONFIG_INNERHOURS, innerhours_value);
+  // persist_write_string(CONFIG_INVERTED, inverted_value);
+  //persist_write_string(CONFIG_INNERHOURS, innerhours_value);
   window_destroy(s_main_window);
 }
 
@@ -86,6 +90,12 @@ static void main_window_load(Window *window) {
 
   current_hour = tick_time->tm_hour;
   startup = true;
+
+  if(strcmp(inverted_value, "invt") == 0) {
+    window_set_background_color(s_main_window, GColorWhite);
+  } else {
+    window_set_background_color(s_main_window, GColorBlack);
+  }
 
   fill_hour_frames();
   update_time(tick_time);
@@ -255,11 +265,11 @@ static void updateTimeLayers() {
   text_layer_set_text(text_layers[1], "");
   text_layer_set_background_color(text_layers[1], GColorClear);
 
-  if(strcmp(inverted_value, "0") == 0) {
-    text_layer_set_text_color(text_layers[0], GColorWhite);
-    text_layer_set_text_color(text_layers[1], GColorWhite);
-  } else {
+  if(strcmp(inverted_value, "invt") == 0) {
     text_layer_set_text_color(text_layers[0], GColorBlack);
     text_layer_set_text_color(text_layers[1], GColorBlack);
+  } else {
+    text_layer_set_text_color(text_layers[0], GColorWhite);
+    text_layer_set_text_color(text_layers[1], GColorWhite);
   }
 }
