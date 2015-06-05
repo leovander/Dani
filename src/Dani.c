@@ -267,12 +267,12 @@ static void fill_hour_frames() {
     hour_pos[3] = GRect(INNER_RIGHT - 10, (INNER_BOTTOM / 2) - 3, TM_SIZE, TM_SIZE);
     hour_pos[4] = GRect(INNER_RIGHT - 12, INNER_BOTTOM - 41, TM_SIZE, TM_SIZE);
     hour_pos[5] = GRect(INNER_RIGHT - 10, INNER_BOTTOM - 14, TM_SIZE, TM_SIZE);
-    hour_pos[6] = GRect(INNER_LEFT + 52, INNER_BOTTOM - 14, TM_SIZE, TM_SIZE);
+    hour_pos[6] = GRect(INNER_LEFT + 53, INNER_BOTTOM - 14, TM_SIZE, TM_SIZE);
     hour_pos[7] = GRect(INNER_LEFT - 6, INNER_BOTTOM - 14, TM_SIZE, TM_SIZE);
     hour_pos[8] = GRect(INNER_LEFT - 7, INNER_BOTTOM - 41, TM_SIZE, TM_SIZE);
     hour_pos[9] = GRect(INNER_LEFT - 7, (INNER_BOTTOM / 2) - 3, TM_SIZE, TM_SIZE);
     hour_pos[10] = GRect(INNER_LEFT - 20, (INNER_BOTTOM / 4) - 6, TM_SIZE, TM_SIZE);
     hour_pos[11] = GRect(INNER_LEFT - 8, INNER_TOP, TM_SIZE, TM_SIZE);
-    hour_pos[12] = GRect(INNER_LEFT + 47, INNER_TOP, TM_SIZE, TM_SIZE);
+    hour_pos[12] = GRect(INNER_LEFT + 50, INNER_TOP, TM_SIZE, TM_SIZE);
   }
 }
